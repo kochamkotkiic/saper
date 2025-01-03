@@ -47,7 +47,7 @@ void uruchom_gre(int wiersze, int kolumny, int liczba_min) {
     char **plansza;
     int pierwszy_ruch_x, pierwszy_ruch_y;
 
-    printf("Podaj współrzędne pierwszego ruchu (x y): ");
+    printf("podaj współrzędne pierwszego ruchu (x y): ");
     scanf("%d %d", &pierwszy_ruch_x, &pierwszy_ruch_y);
 
     tworzenie_planszy(&plansza, wiersze, kolumny);
@@ -82,23 +82,31 @@ void uruchom_z_pliku(const char *sciezka) {
     // odczytujemy ruchy i aktualizujemy planszę
     char komenda;
     int x, y;
+    int liczba_poprawnych_krokow=0;
+    int liczba_punktow = 0;
+    int poziom_trudnosci = 1; //zakładam, że moja plansza ma poziom trudności 1
+
     while (fscanf(plik, " %c %d %d", &komenda, &x, &y) == 3) {
         if (komenda == 'f') {
             plansza[x][y] = 'F';  // flaga
             wypisz_plansze(plansza, wiersze, kolumny);
+            liczba_poprawnych_krokow++;
         } 
         else if (komenda == 'r') {
             if (plansza[x][y] == '*') {
                 wypisz_plansze(plansza, wiersze, kolumny);
-                printf("trafiłeś na minę! koniec gry.\n");
+                liczba_punktow=liczba_poprawnych_krokow * poziom_trudnosci; 
+                printf("%d,%d,0 .\n",liczba_poprawnych_krokow,liczba_punktow); //niepowodzenie
                 break;
             }
             else {
                 plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
                 wypisz_plansze(plansza, wiersze, kolumny);  // zaktualizowana plansza
+                liczba_poprawnych_krokow++;
             }
         }
     }
-
+    liczba_punktow=liczba_poprawnych_krokow * poziom_trudnosci;
+    printf("%d,%d,1 .\n",liczba_poprawnych_krokow,liczba_punktow); //wygrana
     fclose(plik);
 }
