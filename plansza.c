@@ -7,7 +7,7 @@ void tworzenie_planszy(char ***plansza,int wiersze,int kolumny){
     for (int i=0;i<wiersze;i++){
         (*plansza)[i]=malloc(kolumny * sizeof(char));
         for(int j=0;j<kolumny;j++){
-            (*plansza)[i][j]="."; //oznacza nieodkryte pole
+            (*plansza)[i][j]="X"; //oznacza nieodkryte pole
         }
     }
 }
