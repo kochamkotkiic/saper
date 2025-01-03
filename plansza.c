@@ -17,20 +17,22 @@ void wyczysc_plansze(char **plansza,int wiersze){
     }
     free(plansza);
 }
-
-void losowanie_min(char **plansza,int wiersze,int kolumny, int liczba_min){
+void losowanie_min(char **plansza, int wiersze, int kolumny, int liczba_min, int pierwszy_ruch_x, int pierwszy_ruch_y) {
     srand(time(NULL));
-    int naniesione=0;
-    while(naniesione<liczba_min){
+    int naniesione = 0;
+    
+    while (naniesione < liczba_min) {
         int x = rand() % wiersze;
         int y = rand() % kolumny;
 
-        if (plansza[x][y] != '*') { // oznacza minę
-            plansza[x][y] = '*';
+        // sprawdzamy czy nie umieszczamy miny na pierwszym ruchu
+        if ((x != pierwszy_ruch_x || y != pierwszy_ruch_y) && plansza[x][y] != '*') {
+            plansza[x][y] = '*';  
             naniesione++;
         }
     }
 }
+
 int zliczanie_sasiednich_min(char **plansza, int wiersze, int kolumny, int x, int y) {
     int licznik = 0;
 

@@ -45,8 +45,13 @@ int main(int argc, char *argv[]) {
 
 void uruchom_gre(int wiersze, int kolumny, int liczba_min) {
     char **plansza;
+    int pierwszy_ruch_x, pierwszy_ruch_y;
+
+    printf("Podaj współrzędne pierwszego ruchu (x y): ");
+    scanf("%d %d", &pierwszy_ruch_x, &pierwszy_ruch_y);
+
     tworzenie_planszy(&plansza, wiersze, kolumny);
-    losowanie_min(plansza, wiersze, kolumny, liczba_min);
+    losowanie_min(plansza, wiersze, kolumny, liczba_min, pierwszy_ruch_x, pierwszy_ruch_y);
     obliczanie_sasiednich_min(plansza, wiersze, kolumny);
     wypisz_plansze(plansza, wiersze, kolumny);
 
@@ -80,13 +85,16 @@ void uruchom_z_pliku(const char *sciezka) {
     while (fscanf(plik, " %c %d %d", &komenda, &x, &y) == 3) {
         if (komenda == 'f') {
             plansza[x][y] = 'F';  // flaga
+            wypisz_plansze(plansza, wiersze, kolumny);
         } 
         else if (komenda == 'r') {
             if (plansza[x][y] == '*') {
-                printf("trafiłeś na minę! Koniec gry.\n");
+                wypisz_plansze(plansza, wiersze, kolumny);
+                printf("trafiłeś na minę! koniec gry.\n");
                 break;
             }
             else {
+                plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
                 wypisz_plansze(plansza, wiersze, kolumny);  // zaktualizowana plansza
             }
         }
