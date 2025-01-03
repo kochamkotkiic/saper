@@ -88,23 +88,27 @@ void uruchom_z_pliku(const char *sciezka) {
 
     while (fscanf(plik, " %c %d %d", &komenda, &x, &y) == 3) {
         if (komenda == 'f') {
-            plansza[x][y] = 'F';  // flaga
+            if (plansza[x][y] == 'X') {
+                plansza[x][y] = 'F';  // ustawienie flagi
+            } else if (plansza[x][y] == 'F') {
+                plansza[x][y] = 'X';  // usunięcie flagi jeśli kolejny raz f na te same współrzędne
+            }
             wypisz_plansze(plansza, wiersze, kolumny);
             liczba_poprawnych_krokow++;
         } 
-        else if (komenda == 'r') {
+        else if (komenda == 'r') { 
             if (plansza[x][y] == '*') {
                 wypisz_plansze(plansza, wiersze, kolumny);
-                liczba_punktow=liczba_poprawnych_krokow * poziom_trudnosci; 
-                printf("%d,%d,0 .\n",liczba_poprawnych_krokow,liczba_punktow); //niepowodzenie
+                liczba_punktow = liczba_poprawnych_krokow * poziom_trudnosci; 
+                printf("%d,%d,0 .\n", liczba_poprawnych_krokow, liczba_punktow); // niepowodzenie
                 break;
-            }
-            else {
+            } else { //flaga lub zakryte pole
                 plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
-                wypisz_plansze(plansza, wiersze, kolumny);  // zaktualizowana plansza
+                wypisz_plansze(plansza, wiersze, kolumny);
                 liczba_poprawnych_krokow++;
-            }
-        }
+    }
+}
+
     }
     liczba_punktow=liczba_poprawnych_krokow * poziom_trudnosci;
     printf("%d,%d,1 .\n",liczba_poprawnych_krokow,liczba_punktow); //wygrana
