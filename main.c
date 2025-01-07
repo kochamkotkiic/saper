@@ -54,6 +54,8 @@ void uruchom_gre(int wiersze, int kolumny, int liczba_min) {
     losowanie_min(plansza, wiersze, kolumny, liczba_min, pierwszy_ruch_x, pierwszy_ruch_y);
     obliczanie_sasiednich_min(plansza, wiersze, kolumny);
     wypisz_plansze(plansza, wiersze, kolumny);
+    odkryj_pole(plansza, wiersze, kolumny, pierwszy_ruch_x, pierwszy_ruch_y);
+    wypisz_plansze(plansza, wiersze, kolumny);
 
     // Dalsza logika gry (np. wczytywanie ruchów gracza i aktualizacja planszy)
     // Na przykład możesz tu wprowadzić pętlę do przyjmowania komend

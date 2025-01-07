@@ -59,3 +59,26 @@ void obliczanie_sasiednich_min(char **plansza, int wiersze, int kolumny) {
         }
     }
 }
+void odkryj_pole(char **plansza, int wiersze, int kolumny, int x, int y) {
+    // jeśli pole jest już odkryte lub jest flagą nie robimy nic
+    if (plansza[x][y] != 'X') {
+        return;
+    }
+
+    // odkrywamy pole (przypisujemy liczbę sąsiednich min)
+    int liczba_sasiednich_min = zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
+    plansza[x][y] = '0' + liczba_sasiednich_min;
+
+    // jeśli liczba sąsiednich min to 0 to odkrywamy sąsiadujące pola rekurencyjnie
+    if (liczba_sasiednich_min == 0) {
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                int nx = x + dx;
+                int ny = y + dy;
+                if (nx >= 0 && nx < wiersze && ny >= 0 && ny < kolumny && (dx != 0 || dy != 0)) {
+                    odkryj_pole(plansza, wiersze, kolumny, nx, ny); 
+                }
+            }
+        }
+    }
+}
