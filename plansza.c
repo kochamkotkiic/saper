@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "plansza.h"
+
 void tworzenie_planszy(char ***plansza,int wiersze,int kolumny){
     *plansza=malloc(wiersze * sizeof(char *));
     for (int i=0;i<wiersze;i++){
@@ -76,7 +77,9 @@ void odkryj_pole(char **plansza, int wiersze, int kolumny, int x, int y) {
                 int nx = x + dx;
                 int ny = y + dy;
                 if (nx >= 0 && nx < wiersze && ny >= 0 && ny < kolumny && (dx != 0 || dy != 0)) {
-                    odkryj_pole(plansza, wiersze, kolumny, nx, ny); 
+                    if (plansza[nx][ny] == 'X') {
+                        odkryj_pole(plansza, wiersze, kolumny, nx, ny);
+                    } 
                 }
             }
         }

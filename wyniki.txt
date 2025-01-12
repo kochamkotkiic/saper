@@ -1,0 +1,15 @@
+Gloria,4
+Francesco,6
+Gabrielle,8
+Rolando,10
+Matilde,4
+Lucrezia,6
+Cristina,12
+Agnese,20
+Raffaella,16
+Astrid,30
+Griselde,26
+Friedrich,28
+Bastian,18
+bruno,1
+carlo,0

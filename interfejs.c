@@ -21,13 +21,14 @@ void wypisz_plansze(char **plansza, int wiersze, int kolumny) {
                 printf("F ");  // flaga
             } else if (plansza[i][j] == '*') {
                 printf("? ");  // mina ale nie odkryta wiec nie pokazujemy
-            } else if(plansza[i][j]=='!') //odkryta mina wiec pokazujemy
+            } else if(plansza[i][j]=='!'){ //odkryta mina wiec pokazujemy
                 printf("* ");
             } else {
                 printf("%c ", plansza[i][j]);  // odkryte pole z liczbą
             }
         }
         printf("\n");
+    }
 }
 
 

@@ -5,6 +5,7 @@
 #include <getopt.h>
 #include "plansza.h"
 #include "interfejs.h"
+#include "gra.h"
 
 void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci);
 void uruchom_z_pliku(const char *sciezka);
@@ -57,85 +58,88 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Poziom trudności musi zostać określony.\n");
         exit(EXIT_FAILURE);
     }
-
+    
     return 0;
 }
 
 void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci) {
-    char **plansza;
-    int pierwszy_ruch_x, pierwszy_ruch_y;
-    int liczba_poprawnych_krokow = 0;
-    int liczba_odslonietych_min = 0;
-    int liczba_punktow = 0;
+        char **plansza;
+        int pierwszy_ruch_x, pierwszy_ruch_y;
+        int liczba_poprawnych_krokow = 0;
+        int liczba_odslonietych_min = 0;
+        int liczba_punktow = 0;
 
-    printf("podaj współrzędne pierwszego ruchu (x y): ");
-    scanf("%d %d", &pierwszy_ruch_x, &pierwszy_ruch_y);
+        printf("podaj współrzędne pierwszego ruchu (x y): ");
+        scanf("%d %d", &pierwszy_ruch_x, &pierwszy_ruch_y);
 
-    tworzenie_planszy(&plansza, wiersze, kolumny);
-    losowanie_min(plansza, wiersze, kolumny, liczba_min, pierwszy_ruch_x, pierwszy_ruch_y);
-    obliczanie_sasiednich_min(plansza, wiersze, kolumny);
-    wypisz_plansze(plansza, wiersze, kolumny);
-    odkryj_pole(plansza, wiersze, kolumny, pierwszy_ruch_x, pierwszy_ruch_y);
-    wypisz_plansze(plansza, wiersze, kolumny);
-    obsluga_komend(plansza, wiersze, kolumny,liczba_min, &liczba_poprawnych_krokow, &liczba_odslonietych_min, &liczba_punktow, poziom_trudnosci);
-}
-
-void uruchom_z_pliku(const char *sciezka) { //gra z pliku z przykladowa plansza
-    FILE *plik = fopen(sciezka, "r");
-    if (!plik) {
-        printf("nie udało się otworzyć pliku.\n");
-        return;
+        tworzenie_planszy(&plansza, wiersze, kolumny);
+        losowanie_min(plansza, wiersze, kolumny, liczba_min, pierwszy_ruch_x, pierwszy_ruch_y);
+        obliczanie_sasiednich_min(plansza, wiersze, kolumny);
+        odkryj_pole(plansza, wiersze, kolumny, pierwszy_ruch_x, pierwszy_ruch_y);
+        wypisz_plansze(plansza, wiersze, kolumny);
+        obsluga_komend(plansza, wiersze, kolumny,liczba_min, &liczba_poprawnych_krokow, &liczba_odslonietych_min, &liczba_punktow, poziom_trudnosci);
     }
 
-    int wiersze, kolumny;
-    fscanf(plik, "%d %d\n", &wiersze, &kolumny);
-
-    char **plansza;
-    tworzenie_planszy(&plansza, wiersze, kolumny);
-
-    // odczytujemy planszę z pliku
-    for (int i = 0; i < wiersze; i++) {
-        for (int j = 0; j < kolumny; j++) {
-            fscanf(plik, " %c", &plansza[i][j]);
+    void uruchom_z_pliku(const char *sciezka) { //gra z pliku z przykladowa plansza
+        FILE *plik = fopen(sciezka, "r");
+        if (!plik) {
+            printf("nie udało się otworzyć pliku.\n");
+            return;
         }
-    }
 
-    // odczytujemy ruchy i aktualizujemy planszę
-    char komenda;
-    int x, y;
-    int liczba_poprawnych_krokow=0;
-    int liczba_odslonietych_min=0;
-    int liczba_punktow = 0;
-    int poziom_trudnosci = 1; //zakładam, że moja plansza ma poziom trudności 1
+        int wiersze, kolumny;
+        fscanf(plik, "%d %d\n", &wiersze, &kolumny);
 
-    while (fscanf(plik, " %c %d %d", &komenda, &x, &y) == 3) {
-        if (komenda == 'f') {
-            if (plansza[x][y] == 'X') {
-                plansza[x][y] = 'F';  // ustawienie flagi
-            } else if (plansza[x][y] == 'F') {
-                plansza[x][y] = 'X';  // usunięcie flagi jeśli kolejny raz f na te same współrzędne
-            } else if(plansza[x][y]=='*'){
-                liczba_odslonietych_min++; //odslonieto minę
+        char **plansza;
+        tworzenie_planszy(&plansza, wiersze, kolumny);
+
+        // odczytujemy planszę z pliku
+        for (int i = 0; i < wiersze; i++) {
+            for (int j = 0; j < kolumny; j++) {
+                fscanf(plik, " %c", &plansza[i][j]);
             }
-            wypisz_plansze(plansza, wiersze, kolumny);
-            liczba_poprawnych_krokow++;
-        } 
-        else if (komenda == 'r') { 
-            if (plansza[x][y] == '*') {
-                plansza[x][y]='!'; //zamieniamy na odkryta mine zeby mozna bylo ja pokazywac
-                wypisz_plansze(plansza, wiersze, kolumny);
-                liczba_punktow = liczba_poprawnych_krokow * poziom_trudnosci; 
-                printf("%d,%d,0 .\n", liczba_poprawnych_krokow, liczba_punktow); // niepowodzenie
-                break;
-            } else { //flaga lub zakryte pole
-                plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
-                wypisz_plansze(plansza, wiersze, kolumny);
+        }
+
+        // odczytujemy ruchy i aktualizujemy planszę
+        char komenda;
+        int x, y;
+        int liczba_poprawnych_krokow=0;
+        int liczba_odslonietych_min=0;
+        int liczba_punktow = 0;
+        int poziom_trudnosci = 1; //zakładam, że moja plansza ma poziom trudności 1
+        int liczba_min=10;
+        int pierwszy_x=1;
+        int pierwszy_y=1;
+        while (fscanf(plik, " %c %d %d", &komenda, &x, &y) == 3) {
+            if(pierwszy_x==1 && pierwszy_y==1){ // nie tylko dla 1 ruchu odkrywamy wiecej?
+                odkryj_pole(&plansza,x,y);
+                pierwszy_x=0;
+                pierwszy_y=0;
+            }
+            if (komenda == 'f') {
+                if (plansza[x][y] == 'X') {
+                    plansza[x][y] = 'F';  // ustawienie flagi
+                } else if (plansza[x][y] == 'F') {
+                    plansza[x][y] = 'X';  // usunięcie flagi jeśli kolejny raz f na te same współrzędne
+                } else if(plansza[x][y]=='*'){
+                    liczba_odslonietych_min++; //odslonieto minę
+                }
                 liczba_poprawnych_krokow++;
+            } 
+            else if (komenda == 'r') { 
+                if (plansza[x][y] == '*') { 
+                    liczba_punktow = liczba_poprawnych_krokow * poziom_trudnosci; 
+                    printf("%d,%d,0 .\n", liczba_poprawnych_krokow, liczba_punktow); // niepowodzenie
+                    break;
+                } else { //flaga lub zakryte pole
+                    plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
+                    liczba_poprawnych_krokow++;
+                }
             }
         }
-
+        if (liczba_odslonietych_min==liczba_min){
+            liczba_punktow=liczba_poprawnych_krokow * poziom_trudnosci;
+            printf("liczba poprawnych kroków:%d, liczba punktów: %d,1-wygrana! \n",liczba_poprawnych_krokow,liczba_punktow); //wygrana
+        }
+        fclose(plik);
     }
-    liczba_punktow=liczba_poprawnych_krokow * poziom_trudnosci;
-    printf("%d,%d,1 .\n",liczba_poprawnych_krokow,liczba_punktow); //wygrana
-    fclose(plik);
-}

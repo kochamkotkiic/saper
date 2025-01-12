@@ -1,6 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "gra.h"
 #include "plansza.h"
+#include "interfejs.h"
+
+//obsluga wyników
+typedef struct Gracz {
+    char imie[50];
+    int punkty;
+} Gracz;
+
+int porownaj_graczy(const void *a, const void *b) {
+    return ((Gracz *)b)->punkty - ((Gracz *)a)->punkty;
+}
+
+void zapisz_wynik_do_pliku(const char *imie, int punkty) {
+    FILE *plik = fopen("wyniki.txt", "a");
+    if (!plik) {
+        printf("nie udało się otworzyć pliku wyników.\n");
+        return;
+    }
+    fprintf(plik, "%s,%d\n", imie, punkty);
+    fclose(plik);
+}
+
+void wyswietl_najlepszych_graczy() {
+    FILE *plik = fopen("wyniki.txt", "r");
+    if (!plik) {
+        printf("nie udało się otworzyć pliku wyników.\n");
+        return;
+    }
+
+    Gracz gracze[100];
+    int liczba_graczy = 0;
+
+    while (fscanf(plik, "%49[^,],%d\n", gracze[liczba_graczy].imie, &gracze[liczba_graczy].punkty) == 2) {
+        liczba_graczy++;
+    }
+    fclose(plik);
+
+    qsort(gracze, liczba_graczy, sizeof(Gracz), porownaj_graczy);
+
+    printf("5 najlepszych graczy:\n");
+    for (int i = 0; i < 5 && i < liczba_graczy; i++) {
+        printf("%d. %s - %d pkt\n", i + 1, gracze[i].imie, gracze[i].punkty);
+    }
+}
+
+void zakoncz_gre(int punkty) {
+    char imie[50];
+
+    printf("podaj swoje imię: ");
+    scanf("%s", imie);
+
+    zapisz_wynik_do_pliku(imie, punkty);
+    wyswietl_najlepszych_graczy();
+}
+
 
 void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, int *liczba_poprawnych_krokow, int *liczba_odslonietych_min, int *liczba_punktow, int poziom_trudnosci) {
     char komenda;
@@ -17,7 +73,7 @@ void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, in
             }
             (*liczba_poprawnych_krokow)++;
             *liczba_punktow = (*liczba_poprawnych_krokow) * poziom_trudnosci; //aktualny wynik gracza
-            printf("liczba punktow: %d, liczba min do odslonięcia: %d",*liczba_punktow,liczba_min-*liczba_odslonietych_min);
+            printf("liczba punktow: %d, liczba min do odslonięcia: %d \n",*liczba_punktow,liczba_min-*liczba_odslonietych_min);
             wypisz_plansze(plansza, wiersze, kolumny);
         } else if (komenda == 'r') {
             if (plansza[x][y] == '*') {
@@ -25,12 +81,14 @@ void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, in
                 wypisz_plansze(plansza, wiersze, kolumny);
                 *liczba_punktow = (*liczba_poprawnych_krokow) * poziom_trudnosci;
                 printf("niepowodzenie! Liczba punktów: %d\n", *liczba_punktow); // gra zakończona
+                zakoncz_gre(*liczba_punktow);
                 break;
             } else {
+                //odkryj_pole(plansza,wiersze,kolumny,x,y)// bo dla kazdego ruchu moze odkryc wiecej?
                 plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
                 (*liczba_poprawnych_krokow)++;
                 *liczba_punktow = (*liczba_poprawnych_krokow) * poziom_trudnosci; //aktualny wynik gracza
-                printf("liczba punktow: %d, liczba min do odslonięcia: %d",*liczba_punktow,liczba_min-*liczba_odslonietych_min);
+                printf("liczba punktow: %d, liczba min do odslonięcia: %d \n",*liczba_punktow,liczba_min-*liczba_odslonietych_min);
                 wypisz_plansze(plansza, wiersze, kolumny);
             }
         } else {
@@ -38,7 +96,9 @@ void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, in
         }
     if (*liczba_odslonietych_min==liczba_min){
         printf("%d,1 .\n",*liczba_punktow); //wygrana-koniec gry
+        zakoncz_gre(*liczba_punktow);
         break;
     }
+    printf("podaj ruch");
     }
 }
