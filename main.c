@@ -112,7 +112,7 @@ void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci)
         int pierwszy_y=1;
         while (fscanf(plik, " %c %d %d", &komenda, &x, &y) == 3) {
             if(pierwszy_x==1 && pierwszy_y==1){ // nie tylko dla 1 ruchu odkrywamy wiecej?
-                odkryj_pole(&plansza,x,y);
+                odkryj_pole(&plansza,wiersze, kolumny,x,y);
                 pierwszy_x=0;
                 pierwszy_y=0;
             }
