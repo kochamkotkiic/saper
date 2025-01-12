@@ -20,17 +20,14 @@ void wypisz_plansze(char **plansza, int wiersze, int kolumny) {
             } else if (plansza[i][j] == 'F') {
                 printf("F ");  // flaga
             } else if (plansza[i][j] == '*') {
-                printf("* ");  // mina
+                printf("? ");  // mina ale nie odkryta wiec nie pokazujemy
+            } else if(plansza[i][j]=='!') //odkryta mina wiec pokazujemy
+                printf("* ");
             } else {
                 printf("%c ", plansza[i][j]);  // odkryte pole z liczbą
             }
         }
         printf("\n");
-    }
 }
 
 
-void zaktualizuj_plansze(char **plansza, int wiersze, int kolumny, int x, int y, char znak) {
-    plansza[x][y] = znak; //aktualizacja o dane pole
-    wypisz_plansze(plansza, wiersze, kolumny);  
-}

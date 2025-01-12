@@ -1,0 +1,18 @@
+9 9
+X X X X X X X * X
+X * X X X X X X X
+X X X X X X X X X
+* X X * X X X * X
+X X X X X X X X X
+X * X X X * X X X
+X X X X X X X X X
+X X X * X X X * X
+* X X X X X X X X
+r 0 1
+f 1 1
+r 0 2
+f 2 3
+r 4 4
+f 3 2
+r 5 5
+f 6 2

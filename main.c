@@ -2,50 +2,71 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <getopt.h>
 #include "plansza.h"
 #include "interfejs.h"
 
-void uruchom_gre(int wiersze, int kolumny, int liczba_min);
+void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci);
 void uruchom_z_pliku(const char *sciezka);
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        printf("brak argumentu. Użyj -f <ścieżka do pliku> lub uruchom grę w trybie normalnym.\n");
-        return 1;
+    int wiersze=0, kolumny=0, liczba_min=0;
+    int poziom_trudnosci = 0;
+    int opt;
+    char *sciezka = NULL;
+
+    while ((opt = getopt(argc, argv, "f:d:")) != -1) {  
+        switch (opt) {
+        case 'f':
+            sciezka = optarg; //opcjonalne-bo moze byc z pliku lub manualna gra
+            break;
+        case 'd':
+            poziom_trudnosci = atoi(optarg);
+            switch (poziom_trudnosci) {
+                case 1:
+                    wiersze = 9;
+                    kolumny = 9;
+                    liczba_min = 10;
+                    break;
+                case 2:
+                    wiersze = 16;
+                    kolumny = 16;
+                    liczba_min = 40;
+                    break;
+                case 3:
+                    wiersze = 16;
+                    kolumny = 30;
+                    liczba_min = 99;
+                    break;
+                default:
+                    fprintf(stderr, "Nieprawidłowy poziom trudności. Dostępne: 1 (łatwy), 2 (średni), 3 (trudny).\n");
+                    exit(EXIT_FAILURE);
+            }
+            break;
+        default:
+            fprintf(stderr, "Użycie: %s [-r wiersze] [-c kolumny] [-m liczba_min] [-f ścieżka] [-d poziom_trudności]\n", argv[0]);
+            exit(EXIT_FAILURE);
+        }
     }
 
-    if (strcmp(argv[1], "-f") == 0 && argc == 3) {
-        // uruchomienie gry z pliku
-        uruchom_z_pliku(argv[2]);
+    if (sciezka) {
+        uruchom_z_pliku(sciezka);
+    } else if (poziom_trudnosci != 0) {
+        uruchom_gre(wiersze, kolumny, liczba_min, poziom_trudnosci);
     } else {
-        // normalne uruchomienie gry
-        int poziom_trudnosci;
-        printf("wybierz poziom trudności (1 - łatwy, 2 - średni, 3 - trudny): ");
-        scanf("%d", &poziom_trudnosci);
-
-        int wiersze, kolumny, liczba_min;
-
-        switch (poziom_trudnosci) {
-            case 1:
-                wiersze = 9; kolumny = 9; liczba_min = 10; break;
-            case 2:
-                wiersze = 16; kolumny = 16; liczba_min = 40; break;
-            case 3:
-                wiersze = 16; kolumny = 30; liczba_min = 99; break;
-            default:
-                printf("nieprawidłowy poziom trudności.\n");
-                return 1;
-        }
-
-        uruchom_gre(wiersze, kolumny, liczba_min);
+        fprintf(stderr, "Poziom trudności musi zostać określony.\n");
+        exit(EXIT_FAILURE);
     }
 
     return 0;
 }
 
-void uruchom_gre(int wiersze, int kolumny, int liczba_min) {
+void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci) {
     char **plansza;
     int pierwszy_ruch_x, pierwszy_ruch_y;
+    int liczba_poprawnych_krokow = 0;
+    int liczba_odslonietych_min = 0;
+    int liczba_punktow = 0;
 
     printf("podaj współrzędne pierwszego ruchu (x y): ");
     scanf("%d %d", &pierwszy_ruch_x, &pierwszy_ruch_y);
@@ -56,12 +77,10 @@ void uruchom_gre(int wiersze, int kolumny, int liczba_min) {
     wypisz_plansze(plansza, wiersze, kolumny);
     odkryj_pole(plansza, wiersze, kolumny, pierwszy_ruch_x, pierwszy_ruch_y);
     wypisz_plansze(plansza, wiersze, kolumny);
-
-    // Dalsza logika gry (np. wczytywanie ruchów gracza i aktualizacja planszy)
-    // Na przykład możesz tu wprowadzić pętlę do przyjmowania komend
+    obsluga_komend(plansza, wiersze, kolumny,liczba_min, &liczba_poprawnych_krokow, &liczba_odslonietych_min, &liczba_punktow, poziom_trudnosci);
 }
 
-void uruchom_z_pliku(const char *sciezka) {
+void uruchom_z_pliku(const char *sciezka) { //gra z pliku z przykladowa plansza
     FILE *plik = fopen(sciezka, "r");
     if (!plik) {
         printf("nie udało się otworzyć pliku.\n");
@@ -85,6 +104,7 @@ void uruchom_z_pliku(const char *sciezka) {
     char komenda;
     int x, y;
     int liczba_poprawnych_krokow=0;
+    int liczba_odslonietych_min=0;
     int liczba_punktow = 0;
     int poziom_trudnosci = 1; //zakładam, że moja plansza ma poziom trudności 1
 
@@ -94,12 +114,15 @@ void uruchom_z_pliku(const char *sciezka) {
                 plansza[x][y] = 'F';  // ustawienie flagi
             } else if (plansza[x][y] == 'F') {
                 plansza[x][y] = 'X';  // usunięcie flagi jeśli kolejny raz f na te same współrzędne
+            } else if(plansza[x][y]=='*'){
+                liczba_odslonietych_min++; //odslonieto minę
             }
             wypisz_plansze(plansza, wiersze, kolumny);
             liczba_poprawnych_krokow++;
         } 
         else if (komenda == 'r') { 
             if (plansza[x][y] == '*') {
+                plansza[x][y]='!'; //zamieniamy na odkryta mine zeby mozna bylo ja pokazywac
                 wypisz_plansze(plansza, wiersze, kolumny);
                 liczba_punktow = liczba_poprawnych_krokow * poziom_trudnosci; 
                 printf("%d,%d,0 .\n", liczba_poprawnych_krokow, liczba_punktow); // niepowodzenie
@@ -108,8 +131,8 @@ void uruchom_z_pliku(const char *sciezka) {
                 plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
                 wypisz_plansze(plansza, wiersze, kolumny);
                 liczba_poprawnych_krokow++;
-    }
-}
+            }
+        }
 
     }
     liczba_punktow=liczba_poprawnych_krokow * poziom_trudnosci;
