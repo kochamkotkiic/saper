@@ -108,14 +108,14 @@ void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci)
         int liczba_punktow = 0;
         int poziom_trudnosci = 1; //zakładam, że moja plansza ma poziom trudności 1
         int liczba_min=10;
-        int pierwszy_x=1;
-        int pierwszy_y=1;
+        //int pierwszy_x=1;
+        //int pierwszy_y=1;
         while (fscanf(plik, " %c %d %d", &komenda, &x, &y) == 3) {
-            if(pierwszy_x==1 && pierwszy_y==1){ // nie tylko dla 1 ruchu odkrywamy wiecej?
+            /*if(pierwszy_x==1 && pierwszy_y==1){ // nie tylko dla 1 ruchu odkrywamy wiecej?
                 odkryj_pole(&plansza,wiersze, kolumny,x,y);
                 pierwszy_x=0;
                 pierwszy_y=0;
-            }
+            }*/
             if (komenda == 'f') {
                 if (plansza[x][y] == 'X') {
                     plansza[x][y] = 'F';  // ustawienie flagi
