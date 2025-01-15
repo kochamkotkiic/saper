@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
         //int pierwszy_x=1;
         //int pierwszy_y=1;
         while (fscanf(plik, " %c %d %d", &komenda, &x, &y) == 3) {
-            /*if(pierwszy_x==1 && pierwszy_y==1){ // nie tylko dla 1 ruchu odkrywamy wiecej?
+            /*if(pierwszy_x==1 && pierwszy_y==1){ // 
                 odkryj_pole(&plansza,wiersze, kolumny,x,y);
                 pierwszy_x=0;
                 pierwszy_y=0;
