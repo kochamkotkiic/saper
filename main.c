@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci) {
+    void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci) {
         char **plansza;
         int pierwszy_ruch_x, pierwszy_ruch_y;
         int liczba_odslonietych_pol = 0;
