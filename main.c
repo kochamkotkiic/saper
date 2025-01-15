@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci) {
         char **plansza;
         int pierwszy_ruch_x, pierwszy_ruch_y;
-        int liczba_poprawnych_krokow = 0;
+        int liczba_odslonietych_pol = 0;
         int liczba_odslonietych_min = 0;
         int liczba_punktow = 0;
 
@@ -88,7 +88,7 @@ void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci)
         obliczanie_sasiednich_min(plansza, wiersze, kolumny);
         odkryj_pole(plansza, wiersze, kolumny, pierwszy_ruch_x, pierwszy_ruch_y);
         wypisz_plansze(plansza, wiersze, kolumny);
-        obsluga_komend(plansza, wiersze, kolumny,liczba_min, &liczba_poprawnych_krokow, &liczba_odslonietych_min, &liczba_punktow, poziom_trudnosci);
+        obsluga_komend(plansza, wiersze, kolumny,liczba_min, &liczba_odslonietych_pol, &liczba_odslonietych_min, &liczba_punktow, poziom_trudnosci);
     }
 
     void uruchom_z_pliku(const char *sciezka) { //gra z pliku z przykladowa plansza

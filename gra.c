@@ -58,7 +58,7 @@ void zakoncz_gre(int punkty) {
 }
 
 
-void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, int *liczba_poprawnych_krokow, int *liczba_odslonietych_min, int *liczba_punktow, int poziom_trudnosci) {
+void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, int *liczba_odslonietych_pol, int *liczba_odslonietych_min, int *liczba_punktow, int poziom_trudnosci) {
     char komenda;
     int x, y;
     printf("podaj ruch:\n");
@@ -77,23 +77,22 @@ void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, in
                 (*liczba_odslonietych_min)++; // odsłonięto minę
                 plansza[x][y] = 'F';  // ustawienie flagi
             }
-            (*liczba_poprawnych_krokow)++;
-            *liczba_punktow = (*liczba_poprawnych_krokow) * poziom_trudnosci; //aktualny wynik gracza
+            *liczba_punktow = (*liczba_odslonietych_pol) * poziom_trudnosci; //aktualny wynik gracza
             printf("liczba punktow: %d, liczba min do odslonięcia: %d \n",*liczba_punktow,liczba_min-*liczba_odslonietych_min);
             wypisz_plansze(plansza, wiersze, kolumny);
         } else if (komenda == 'r') {
             if (plansza[x][y] == '*') {
                 plansza[x][y] = '!'; // oznaczenie odkrytej miny
                 wypisz_plansze(plansza, wiersze, kolumny);
-                *liczba_punktow = (*liczba_poprawnych_krokow) * poziom_trudnosci;
+                *liczba_punktow = (*liczba_odslonietych_pol) * poziom_trudnosci;
                 printf("niepowodzenie! Liczba punktów: %d\n", *liczba_punktow); // gra zakończona
                 zakoncz_gre(*liczba_punktow);
                 break;
             } else {
                 odkryj_pole(plansza,wiersze,kolumny,x,y);
                 //plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
-                (*liczba_poprawnych_krokow)++;
-                *liczba_punktow = (*liczba_poprawnych_krokow) * poziom_trudnosci; //aktualny wynik gracza
+                (*liczba_odslonietych_pol)++;
+                *liczba_punktow = (*liczba_odslonietych_pol) * poziom_trudnosci; //aktualny wynik gracza
                 printf("liczba punktow: %d, liczba min do odslonięcia: %d \n",*liczba_punktow,liczba_min-*liczba_odslonietych_min);
                 wypisz_plansze(plansza, wiersze, kolumny);
             }
