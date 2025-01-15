@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     int poziom_trudnosci = 0;
     int opt;
     char *sciezka = NULL;
-
+    int wlasny_poziom=0;
     while ((opt = getopt(argc, argv, "f:d:")) != -1) {  
         switch (opt) {
         case 'f':
@@ -39,8 +39,11 @@ int main(int argc, char *argv[]) {
                     kolumny = 30;
                     liczba_min = 99;
                     break;
+                case 4:
+                    wlasny_poziom=1;
+                    break;
                 default:
-                    fprintf(stderr, "Nieprawidłowy poziom trudności. Dostępne: 1 (łatwy), 2 (średni), 3 (trudny).\n");
+                    fprintf(stderr, "Nieprawidłowy poziom trudności. Dostępne: 1 (łatwy), 2 (średni), 3 (trudny). 4 (wlasny poziom)\n");
                     exit(EXIT_FAILURE);
             }
             break;
@@ -49,7 +52,10 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         }
     }
-
+    if(wlasny_poziom==1){//definicja wlasnego poziomu
+        printf("podaj wymiary planszy oraz liczbe min: \n");
+        scanf("%d %d %d",&wiersze,&kolumny,&liczba_min);
+    }
     if (sciezka) {
         uruchom_z_pliku(sciezka);
     } else if (poziom_trudnosci != 0) {

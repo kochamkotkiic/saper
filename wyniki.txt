@@ -26,3 +26,4 @@ betsy,0
 ricardo,1
 anne,0
 henry,1
+jack,8
