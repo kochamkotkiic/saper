@@ -13,3 +13,10 @@ Friedrich,28
 Bastian,18
 bruno,1
 carlo,0
+carlito,0
+nacho,10
+tuco,0
+gus,2
+hector,3
+lalo,2
+saul,11

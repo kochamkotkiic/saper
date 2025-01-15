@@ -61,7 +61,13 @@ void zakoncz_gre(int punkty) {
 void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, int *liczba_poprawnych_krokow, int *liczba_odslonietych_min, int *liczba_punktow, int poziom_trudnosci) {
     char komenda;
     int x, y;
+    printf("podaj ruch:\n");
     while(scanf(" %c %d %d",&komenda,&x,&y)==3){
+        if(x<0 || x>wiersze || y<0 || y>kolumny){ //zle podane wspolrzedne
+            printf("podano nieprawidłowe współrzędne!");
+            printf("podaj ruch:\n");
+            continue;
+        }
         if (komenda == 'f') {
             if (plansza[x][y] == 'X') {
                 plansza[x][y] = 'F';  // ustawienie flagi
@@ -95,10 +101,10 @@ void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, in
             printf("nieprawidłowa komenda! format: komenda x y\n");
         }
     if (*liczba_odslonietych_min==liczba_min){
-        printf("%d,1 .\n",*liczba_punktow); //wygrana-koniec gry
+        printf("liczba punktów:%d,1-wygrana\n",*liczba_punktow); //wygrana-koniec gry
         zakoncz_gre(*liczba_punktow);
         break;
     }
-    printf("podaj ruch");
+    printf("podaj ruch:\n");
     }
 }

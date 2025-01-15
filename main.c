@@ -129,7 +129,7 @@ void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci)
             else if (komenda == 'r') { 
                 if (plansza[x][y] == '*') { 
                     liczba_punktow = liczba_poprawnych_krokow * poziom_trudnosci; 
-                    printf("%d,%d,0 .\n", liczba_poprawnych_krokow, liczba_punktow); // niepowodzenie
+                    printf("liczba poprawnych kroków:%d,liczba punktów:%d,0-przegrana!\n", liczba_poprawnych_krokow, liczba_punktow); // niepowodzenie
                     break;
                 } else { //flaga lub zakryte pole
                     plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
