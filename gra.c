@@ -63,7 +63,7 @@ void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, in
     int x, y;
     printf("podaj ruch:\n");
     while(scanf(" %c %d %d",&komenda,&x,&y)==3){
-        if(x<0 || x>wiersze || y<0 || y>kolumny){ //zle podane wspolrzedne
+        if(x<0 || x>(wiersze-1) || y<0 || y>(kolumny-1)){ //zle podane wspolrzedne
             printf("podano nieprawidłowe współrzędne!");
             printf("podaj ruch:\n");
             continue;

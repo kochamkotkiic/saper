@@ -76,11 +76,9 @@ void odkryj_pole(char **plansza, int wiersze, int kolumny, int x, int y) {
             for (int dy = -1; dy <= 1; dy++) {
                 int nx = x + dx;
                 int ny = y + dy;
-                if (nx >= 0 && nx < wiersze && ny >= 0 && ny < kolumny && (dx != 0 || dy != 0)) {
-                    if (plansza[nx][ny] == 'X') {
-                        odkryj_pole(plansza, wiersze, kolumny, nx, ny);
-                    } 
-                }
+                if ((dx != 0 || dy != 0) && nx >= 0 && nx < wiersze && ny >= 0 && ny < kolumny && plansza[nx][ny] == 'X') {
+                    odkryj_pole(plansza, wiersze, kolumny, nx, ny);
+                } 
             }
         }
     }

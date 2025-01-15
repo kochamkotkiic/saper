@@ -20,3 +20,6 @@ gus,2
 hector,3
 lalo,2
 saul,11
+kim,2
+howard,0
+betsy,0

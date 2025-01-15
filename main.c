@@ -69,9 +69,14 @@ void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci)
         int liczba_odslonietych_min = 0;
         int liczba_punktow = 0;
 
-        printf("podaj współrzędne pierwszego ruchu (x y): ");
+        printf("podaj współrzędne pierwszego ruchu (x y): \n ");
         scanf("%d %d", &pierwszy_ruch_x, &pierwszy_ruch_y);
-
+        if(pierwszy_ruch_x<0 || pierwszy_ruch_x>(wiersze-1) || pierwszy_ruch_y<0 || pierwszy_ruch_y>(kolumny-1)){ //zle podane wspolrzedne
+            printf("podano nieprawidłowe współrzędne! \n");
+            printf("podaj współrzędne pierwszego ruchu (x y): \n");
+            scanf("%d %d", &pierwszy_ruch_x, &pierwszy_ruch_y);
+        }
+        
         tworzenie_planszy(&plansza, wiersze, kolumny);
         losowanie_min(plansza, wiersze, kolumny, liczba_min, pierwszy_ruch_x, pierwszy_ruch_y);
         obliczanie_sasiednich_min(plansza, wiersze, kolumny);
