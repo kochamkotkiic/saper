@@ -90,8 +90,8 @@ void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, in
                 zakoncz_gre(*liczba_punktow);
                 break;
             } else {
-                //odkryj_pole(plansza,wiersze,kolumny,x,y)// bo dla kazdego ruchu moze odkryc wiecej?
-                plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
+                odkryj_pole(plansza,wiersze,kolumny,x,y);
+                //plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
                 (*liczba_poprawnych_krokow)++;
                 *liczba_punktow = (*liczba_poprawnych_krokow) * poziom_trudnosci; //aktualny wynik gracza
                 printf("liczba punktow: %d, liczba min do odslonięcia: %d \n",*liczba_punktow,liczba_min-*liczba_odslonietych_min);

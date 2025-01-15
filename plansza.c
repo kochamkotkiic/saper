@@ -76,7 +76,7 @@ void odkryj_pole(char **plansza, int wiersze, int kolumny, int x, int y) {
             for (int dy = -1; dy <= 1; dy++) {
                 int nx = x + dx;
                 int ny = y + dy;
-                if ((dx != 0 || dy != 0) && nx >= 0 && nx < wiersze && ny >= 0 && ny < kolumny && plansza[nx][ny] == 'X') {
+                if ((dx != 0 || dy != 0) && nx >= 0 && nx < wiersze && ny >= 0 && ny < kolumny && plansza[nx][ny] == 'X' && zliczanie_sasiednich_min(plansza,wiersze,kolumny,nx,ny)==0) {
                     odkryj_pole(plansza, wiersze, kolumny, nx, ny);
                 } 
             }

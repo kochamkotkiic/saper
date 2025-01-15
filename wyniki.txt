@@ -23,3 +23,6 @@ saul,11
 kim,2
 howard,0
 betsy,0
+ricardo,1
+anne,0
+henry,1

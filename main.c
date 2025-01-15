@@ -88,7 +88,7 @@ void uruchom_gre(int wiersze, int kolumny, int liczba_min, int poziom_trudnosci)
     void uruchom_z_pliku(const char *sciezka) { //gra z pliku z przykladowa plansza
         FILE *plik = fopen(sciezka, "r");
         if (!plik) {
-            printf("nie udało się otworzyć pliku.\n");
+            printf("nie udało się otworzyć pliku \n");
             return;
         }
 
