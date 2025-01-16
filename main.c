@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
             }
             break;
         default:
-            fprintf(stderr, "Użycie: %s [-r wiersze] [-c kolumny] [-m liczba_min] [-f ścieżka] [-d poziom_trudności]\n", argv[0]);
+            fprintf(stderr, "Użycie: %s [-f ścieżka] [-d poziom_trudności]\n", argv[0]);
             exit(EXIT_FAILURE);
         }
     }

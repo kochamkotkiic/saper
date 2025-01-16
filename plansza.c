@@ -61,24 +61,25 @@ void obliczanie_sasiednich_min(char **plansza, int wiersze, int kolumny) {
     }
 }
 void odkryj_pole(char **plansza, int wiersze, int kolumny, int x, int y) {
-    // jeśli pole jest już odkryte lub jest flagą nie robimy nic
-    if (plansza[x][y] != 'X') {
+    // gdy współrzędne nie są w granicach planszy lub pole jest zakryte
+    if (x < 0 || x >= wiersze || y < 0 || y >= kolumny || plansza[x][y] != 'X') {
         return;
     }
 
-    // odkrywamy pole (przypisujemy liczbę sąsiednich min)
     int liczba_sasiednich_min = zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
+
+    // ustawia pole jako odkryte-tylko to sie wykona gdy wokól są miny
     plansza[x][y] = '0' + liczba_sasiednich_min;
 
-    // jeśli liczba sąsiednich min to 0 to odkrywamy sąsiadujące pola rekurencyjnie
-    if (liczba_sasiednich_min == 0) {
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                int nx = x + dx;
-                int ny = y + dy;
-                if ((dx != 0 || dy != 0) && nx >= 0 && nx < wiersze && ny >= 0 && ny < kolumny && plansza[nx][ny] == 'X' && zliczanie_sasiednich_min(plansza,wiersze,kolumny,nx,ny)==0) {
-                    odkryj_pole(plansza, wiersze, kolumny, nx, ny);
-                } 
+   
+    if (liczba_sasiednich_min > 0) {
+        return;
+    }
+     // jeśli nie ma sąsiednich min to odkrywa sąsiednie pola rekurencyjnie
+    for (int dx = -1; dx <= 1; dx++) {
+        for (int dy = -1; dy <= 1; dy++) {
+            if (dx != 0 || dy != 0) { 
+                odkryj_pole(plansza, wiersze, kolumny, x + dx, y + dy);
             }
         }
     }

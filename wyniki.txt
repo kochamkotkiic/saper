@@ -9,6 +9,3 @@ Agnese,20
 Raffaella,16
 Astrid,30
 Griselde,26
-Friedrich,28
-
-
