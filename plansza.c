@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "plansza.h"
-
+#include <string.h>
 void tworzenie_planszy(char ***plansza,int wiersze,int kolumny){
     *plansza=malloc(wiersze * sizeof(char *));
     for (int i=0;i<wiersze;i++){
@@ -51,36 +51,32 @@ int zliczanie_sasiednich_min(char **plansza, int wiersze, int kolumny, int x, in
     return licznik;
 }
 
-void obliczanie_sasiednich_min(char **plansza, int wiersze, int kolumny) {
-    for (int i = 0; i < wiersze; i++) {
-        for (int j = 0; j < kolumny; j++) {
-            if (plansza[i][j] != '*') {
-                plansza[i][j] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, i, j);
-            }
-        }
+void obliczanie_sasiednich_min(char **plansza, int wiersze, int kolumny, int x, int y) {
+    if (plansza[x][y] != '*') {
+        plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
     }
 }
-void odkryj_pole(char **plansza, int wiersze, int kolumny, int x, int y) {
-    // gdy współrzędne nie są w granicach planszy lub pole jest zakryte
-    if (x < 0 || x >= wiersze || y < 0 || y >= kolumny || plansza[x][y] != 'X') {
+void odkryj_pole(char **plansza, int wiersze, int kolumny, int x, int y, int **odkryte) {
+    // gdy współrzędne nie są w granicach planszy lub pole jest zakryte lub odkryte
+    if (x < 0 || x >= wiersze || y < 0 || y >= kolumny || odkryte[x][y] == 1 || plansza[x][y] == 'F') {
         return;
     }
+    odkryte[x][y] = 1;
+    if (plansza[x][y] != '*') {
+        obliczanie_sasiednich_min(plansza,wiersze,kolumny, x, y);
+    }
 
-    int liczba_sasiednich_min = zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
-
-    // ustawia pole jako odkryte-tylko to sie wykona gdy wokól są miny
-    plansza[x][y] = '0' + liczba_sasiednich_min;
-
-   
-    if (liczba_sasiednich_min > 0) {
+    if (plansza[x][y]!= '0') {
         return;
     }
+  
      // jeśli nie ma sąsiednich min to odkrywa sąsiednie pola rekurencyjnie
     for (int dx = -1; dx <= 1; dx++) {
         for (int dy = -1; dy <= 1; dy++) {
             if (dx != 0 || dy != 0) { 
-                odkryj_pole(plansza, wiersze, kolumny, x + dx, y + dy);
+                odkryj_pole(plansza, wiersze, kolumny, x + dx, y + dy, odkryte);
             }
         }
     }
+    return;
 }

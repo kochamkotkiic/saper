@@ -74,6 +74,10 @@ int main(int argc, char *argv[]) {
         int liczba_odslonietych_pol = 0;
         int liczba_odslonietych_min = 0;
         int liczba_punktow = 0;
+        int **odkryte = malloc(wiersze * sizeof(int *));
+        for (int i = 0; i < wiersze; i++) {
+            odkryte[i] = calloc(kolumny, sizeof(int)); // wszystkie pola są początkowo nieodkryte -inicjalizuje na 0 calloc
+        }
 
         printf("podaj współrzędne pierwszego ruchu (x y): \n ");
         scanf("%d %d", &pierwszy_ruch_x, &pierwszy_ruch_y);
@@ -85,10 +89,15 @@ int main(int argc, char *argv[]) {
         
         tworzenie_planszy(&plansza, wiersze, kolumny);
         losowanie_min(plansza, wiersze, kolumny, liczba_min, pierwszy_ruch_x, pierwszy_ruch_y);
-        obliczanie_sasiednich_min(plansza, wiersze, kolumny);
-        odkryj_pole(plansza, wiersze, kolumny, pierwszy_ruch_x, pierwszy_ruch_y);
+        zliczanie_sasiednich_min(plansza,wiersze,kolumny,pierwszy_ruch_x,pierwszy_ruch_y);
+        obliczanie_sasiednich_min(plansza, wiersze, kolumny,pierwszy_ruch_x,pierwszy_ruch_y);
+        odkryj_pole(plansza, wiersze, kolumny, pierwszy_ruch_x, pierwszy_ruch_y,odkryte);
         wypisz_plansze(plansza, wiersze, kolumny);
-        obsluga_komend(plansza, wiersze, kolumny,liczba_min, &liczba_odslonietych_pol, &liczba_odslonietych_min, &liczba_punktow, poziom_trudnosci);
+        obsluga_komend(plansza, wiersze, kolumny,liczba_min, &liczba_odslonietych_pol, &liczba_odslonietych_min, &liczba_punktow, poziom_trudnosci, odkryte);
+        wyczysc_plansze(plansza,wiersze);
+        for (int i = 0; i < wiersze; i++) {
+            free(odkryte[i]);
+        }
     }
 
     void uruchom_z_pliku(const char *sciezka) { //gra z pliku z przykladowa plansza
@@ -122,11 +131,6 @@ int main(int argc, char *argv[]) {
         //int pierwszy_x=1;
         //int pierwszy_y=1;
         while (fscanf(plik, " %c %d %d", &komenda, &x, &y) == 3) {
-            /*if(pierwszy_x==1 && pierwszy_y==1){ // 
-                odkryj_pole(&plansza,wiersze, kolumny,x,y);
-                pierwszy_x=0;
-                pierwszy_y=0;
-            }*/
             if (komenda == 'f') {
                 if (plansza[x][y] == 'X') {
                     plansza[x][y] = 'F';  // ustawienie flagi
@@ -143,7 +147,7 @@ int main(int argc, char *argv[]) {
                     printf("liczba poprawnych kroków:%d,liczba punktów:%d,0-przegrana!\n", liczba_poprawnych_krokow, liczba_punktow); // niepowodzenie
                     break;
                 } else { //flaga lub zakryte pole
-                    plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
+                    obliczanie_sasiednich_min(plansza,wiersze,kolumny,x,y);
                     liczba_poprawnych_krokow++;
                 }
             }

@@ -58,9 +58,11 @@ void zakoncz_gre(int punkty) {
 }
 
 
-void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, int *liczba_odslonietych_pol, int *liczba_odslonietych_min, int *liczba_punktow, int poziom_trudnosci) {
+void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, int *liczba_odslonietych_pol, int *liczba_odslonietych_min, int *liczba_punktow, int poziom_trudnosci,int **odkryte) {
     char komenda;
     int x, y;
+    
+    
     printf("podaj ruch:\n");
     while(scanf(" %c %d %d",&komenda,&x,&y)==3){
         if(x<0 || x>(wiersze-1) || y<0 || y>(kolumny-1)){ //zle podane wspolrzedne
@@ -89,9 +91,9 @@ void obsluga_komend(char **plansza, int wiersze, int kolumny, int liczba_min, in
                 zakoncz_gre(*liczba_punktow);
                 break;
             } else {
-                odkryj_pole(plansza,wiersze,kolumny,x,y);
-                //plansza[x][y] = '0' + zliczanie_sasiednich_min(plansza, wiersze, kolumny, x, y);
-                (*liczba_odslonietych_pol)++;
+                zliczanie_sasiednich_min(plansza,wiersze,kolumny,x,y);
+                obliczanie_sasiednich_min(plansza,wiersze,kolumny,x,y);
+                odkryj_pole(plansza,wiersze,kolumny,x,y,odkryte);
                 *liczba_punktow = (*liczba_odslonietych_pol) * poziom_trudnosci; //aktualny wynik gracza
                 printf("liczba punktow: %d, liczba min do odslonięcia: %d \n",*liczba_punktow,liczba_min-*liczba_odslonietych_min);
                 wypisz_plansze(plansza, wiersze, kolumny);
