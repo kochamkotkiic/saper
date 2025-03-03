@@ -11,3 +11,5 @@ Astrid,30
 Griselde,1
 hank,1
 
+df,0
+tevub,0
